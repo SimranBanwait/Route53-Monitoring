@@ -5,13 +5,12 @@ import logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-SENDER_EMAIL    = "awsalert.staging@ohiomron.com"
-RECIPIENT_EMAIL = "awsalert.staging@ohiomron.com"
-AWS_REGION      = "us-east-1"
-RUNBOOK_URL     = "https://omronhealthcare-ohi.atlassian.net/wiki/spaces/ODS/pages/3453517825/ODS-Alert-Runbook+Region+-+Environment+-Alert+VLT+Mobile+Downstream+Processing+Error"
+AWS_REGION  = "us-east-1"
+SNS_TOPIC   = "arn:aws:sns:us-east-1:YOUR_ACCOUNT_ID:SK-POC-SNS-Custom-Test"
+RUNBOOK_URL = "https://omronhealthcare-ohi.atlassian.net/wiki/spaces/ODS/pages/3453517825/ODS-Alert-Runbook+Region+-+Environment+-Alert+VLT+Mobile+Downstream+Processing+Error"
 
 route53 = boto3.client("route53")
-ses     = boto3.client("ses", region_name=AWS_REGION)
+sns     = boto3.client("sns", region_name=AWS_REGION)
 
 
 def get_zone_name(zone_id):
@@ -71,7 +70,7 @@ def lambda_handler(event, context):
 
     subject = f"POC-USSTG-Route53-ALERT Hosted Zone Record change detected | Domain: {zone_name}"
 
-    body_text = f"""Hi Team,
+    message = f"""Hi Team,
 
 We have encountered {action_word} of a record {record_name}, in Hosted zone {zone_name} {clean_zone_id} by user {caller}
 
@@ -83,19 +82,14 @@ Connected Health R&D Team
 This message is intended for designated recipients only. If you are not the authorized recipient, or you were not expecting this message, or if you have received this message in error, please delete all copies of this message. Any unauthorized use or distribution of this message is prohibited."""
 
     try:
-        ses.send_email(
-            Source=SENDER_EMAIL,
-            Destination={"ToAddresses": [RECIPIENT_EMAIL]},
-            Message={
-                "Subject": {"Data": subject, "Charset": "UTF-8"},
-                "Body": {
-                    "Text": {"Data": body_text, "Charset": "UTF-8"},
-                },
-            },
+        sns.publish(
+            TopicArn=SNS_TOPIC,
+            Subject=subject,
+            Message=message,
         )
-        logger.info("Alert email sent successfully.")
+        logger.info("Alert published to SNS successfully.")
     except Exception as e:
-        logger.error(f"Failed to send email: {e}")
+        logger.error(f"Failed to publish to SNS: {e}")
         raise
 
     return {"statusCode": 200, "body": "Alert sent."}

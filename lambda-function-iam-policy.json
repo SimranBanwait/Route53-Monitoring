@@ -10,12 +10,12 @@
       "Resource": "*"
     },
     {
-      "Sid": "SESSendEmail",
+      "Sid": "SNSPublish",
       "Effect": "Allow",
       "Action": [
-        "ses:SendEmail"
+        "sns:Publish"
       ],
-      "Resource": "arn:aws:ses:us-east-1:YOUR_ACCOUNT_ID:identity/awsalert.staging@ohiomron.com"
+      "Resource": "arn:aws:sns:us-east-1:YOUR_ACCOUNT_ID:SK-POC-SNS-Custom-Test"
     },
     {
       "Sid": "CloudWatchLogs",
