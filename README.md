@@ -17,7 +17,7 @@ Automated email alerting system that detects any DNS record changes across all R
 
 ## Architecture
 
-![Architecture Diagram](Images/0.png)
+![Architecture Diagram](Temp/0.png)
 
 ---
 
