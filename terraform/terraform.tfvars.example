@@ -1,0 +1,6 @@
+aws_region    = "us-east-1"
+sns_topic_arn = "arn:aws:sns:us-east-1:123456789012:MySNSTopic"
+function_name = "route53-dns-monitoring"
+role_name     = "route53-dns-monitoring-role"
+policy_name   = "route53-dns-monitoring-policy"
+event_rule_name = "route53-dns-monitoring-rule"
