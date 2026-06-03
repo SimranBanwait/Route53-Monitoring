@@ -1,0 +1,9 @@
+# Ignore the whole terraform folder as requested
+terraform/
+
+# Standard ignores
+.DS_Store
+*.log
+__pycache__/
+*.py[cod]
+*$py.class

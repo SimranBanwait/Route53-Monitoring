@@ -1,3 +1,4 @@
+import os
 import boto3
 import json
 import logging
@@ -5,8 +6,8 @@ import logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-AWS_REGION  = "us-east-1"
-SNS_TOPIC   = "arn:aws:sns:us-east-1:689344065739:SK-POC-SNS-Custom-Test"
+AWS_REGION  = os.environ.get("AWS_REGION", "us-east-1")
+SNS_TOPIC   = os.environ.get("SNS_TOPIC_ARN")
 RUNBOOK_URL = "https://omronhealthcare-ohi.atlassian.net/wiki/spaces/ODS/pages/3453517825/ODS-Alert-Runbook+Region+-+Environment+-Alert+VLT+Mobile+Downstream+Processing+Error"
 
 route53 = boto3.client("route53")
