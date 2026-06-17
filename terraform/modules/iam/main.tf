@@ -10,44 +10,34 @@ resource "aws_iam_role" "this" {
         Principal = {
           Service = "lambda.amazonaws.com"
         }
-      }
+      },
     ]
   })
 }
 
 resource "aws_iam_policy" "this" {
   name        = var.policy_name
-  description = "Permissions for Route53 Monitoring Lambda"
+  description = "IAM policy for Route53 monitoring Lambda"
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Sid    = "Route53ListZones"
-        Effect = "Allow"
-        Action = [
-          "route53:ListHostedZones"
-        ]
-        Resource = "*"
-      },
-      {
-        Sid    = "SNSPublish"
-        Effect = "Allow"
-        Action = [
-          "sns:Publish"
-        ]
-        Resource = var.sns_topic_arn
-      },
-      {
-        Sid    = "CloudWatchLogs"
-        Effect = "Allow"
         Action = [
           "logs:CreateLogGroup",
           "logs:CreateLogStream",
-          "logs:PutLogEvents"
+          "logs:PutLogEvents",
         ]
-        Resource = "arn:aws:logs:*:*:log-group:/aws/lambda/*"
-      }
+        Effect   = "Allow"
+        Resource = "arn:aws:logs:*:*:*"
+      },
+      {
+        Action = [
+          "sns:Publish",
+        ]
+        Effect   = "Allow"
+        Resource = var.sns_topic_arn
+      },
     ]
   })
 }

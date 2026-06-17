@@ -1,9 +1,16 @@
+module "sns" {
+  source = "./modules/sns"
+
+  topic_name    = var.sns_topic_name
+  email_address = var.sns_subscription_email
+}
+
 module "iam" {
   source = "./modules/iam"
 
   role_name     = var.role_name
   policy_name   = var.policy_name
-  sns_topic_arn = var.sns_topic_arn
+  sns_topic_arn = module.sns.topic_arn
 }
 
 module "lambda" {
@@ -11,7 +18,7 @@ module "lambda" {
 
   function_name = var.function_name
   role_arn      = module.iam.role_arn
-  sns_topic_arn = var.sns_topic_arn
+  sns_topic_arn = module.sns.topic_arn
   source_file   = "${path.module}/../lambda-function.py"
 }
 

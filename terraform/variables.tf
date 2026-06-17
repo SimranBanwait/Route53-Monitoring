@@ -22,9 +22,16 @@ variable "policy_name" {
   default     = "route53-dns-monitoring-policy"
 }
 
-variable "sns_topic_arn" {
-  description = "The ARN of the SNS topic the Lambda function will publish to"
+variable "sns_topic_name" {
+  description = "The name of the SNS topic to create"
   type        = string
+  default     = "route53-dns-monitoring-topic"
+}
+
+variable "sns_subscription_email" {
+  description = "The email address for SNS subscription"
+  type        = string
+  default     = "temp.banwait.1@gmail.com"
 }
 
 variable "event_rule_name" {
